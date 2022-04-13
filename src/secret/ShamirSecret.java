@@ -19,4 +19,11 @@ public class ShamirSecret {
         return secret;
     }
 
+    @Override
+    public String toString() {
+        return "ShamirSecret{" +
+                "part=" + part +
+                ", secret=" + secret +
+                '}';
+    }
 }
