@@ -14,23 +14,33 @@ public class Combiner {
         this.rebuildCount = rebuildCount;
     }
 
-    public void combine(List<ShamirSecret> parts,BigInteger primeNumber){
-        BigDecimal resultSum = BigDecimal.ONE;
-        for (int i = 0; i < rebuildCount; i++) {
-            BigDecimal product = BigDecimal.ONE;
-            for (int j = 0; j < rebuildCount; j++) {
-                if(i!=j) {
-                    ShamirSecret current = parts.get(j);
-                    BigDecimal currentPart = new BigDecimal(parts.get(j).getSecret());
-                    BigDecimal diveder = new BigDecimal(current.getSecret().subtract(parts.get(i).getSecret()).mod(primeNumber));
-                    BigDecimal reesult = currentPart.divide(diveder, RoundingMode.HALF_UP).remainder(new BigDecimal(primeNumber));
-                    product = product.multiply(reesult);
-                }
+    public void combine(List<ShamirSecret> shares,BigInteger primeNumber){
+        BigInteger accum = BigInteger.ZERO;
+
+        for(int formula = 0; formula < shares.size(); formula++)
+        {
+            BigInteger numerator = BigInteger.ONE;
+            BigInteger denominator = BigInteger.ONE;
+
+            for(int count = 0; count < shares.size(); count++)
+            {
+                if(formula == count)
+                    continue; // If not the same value
+
+                int startposition = shares.get(formula).getPart();
+                int nextposition = shares.get(count).getPart();
+
+                numerator = numerator.multiply(BigInteger.valueOf(nextposition).negate()).mod(primeNumber); // (numerator * -nextposition) % prime;
+                denominator = denominator.multiply(BigInteger.valueOf(startposition - nextposition)).mod(primeNumber); // (denominator * (startposition - nextposition)) % prime;
             }
-            int part = parts.get(i).getPart();
-            resultSum = resultSum.add(product.multiply(BigDecimal.valueOf(part)).remainder(new BigDecimal(primeNumber)));
+            BigInteger value = shares.get(formula).getSecret();
+            BigInteger tmp = value.multiply(numerator). multiply(denominator.modInverse(primeNumber));
+            accum = primeNumber.add(accum).add(tmp).mod(primeNumber); //  (prime + accum + (value * numerator * modInverse(denominator))) % prime;
         }
-        System.out.println("SECRET : " + resultSum);
+
+        System.out.println("The secret is: " + accum + "\n");
+
+
     }
 
 }
