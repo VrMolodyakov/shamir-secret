@@ -15,30 +15,22 @@ public class Combiner {
     }
 
     public void combine(List<ShamirSecret> shares,BigInteger primeNumber){
-        BigInteger accum = BigInteger.ZERO;
-
-        for(int formula = 0; formula < shares.size(); formula++)
-        {
-            BigInteger numerator = BigInteger.ONE;
-            BigInteger denominator = BigInteger.ONE;
-
-            for(int count = 0; count < shares.size(); count++)
-            {
-                if(formula == count)
-                    continue; // If not the same value
-
-                int startposition = shares.get(formula).getPart();
-                int nextposition = shares.get(count).getPart();
-
-                numerator = numerator.multiply(BigInteger.valueOf(nextposition).negate()).mod(primeNumber); // (numerator * -nextposition) % prime;
-                denominator = denominator.multiply(BigInteger.valueOf(startposition - nextposition)).mod(primeNumber); // (denominator * (startposition - nextposition)) % prime;
+        BigInteger secret;
+        BigInteger finalSecret = BigInteger.ZERO;
+        BigInteger temp;
+        for (int i = 0; i < shares.size(); i++) {
+            secret = BigInteger.ONE;
+            for (int j = 0; j < shares.size(); j++) {
+                if (j == i) continue;
+                int numenator =shares.get(j).getPart() - shares.get(i).getPart();
+                temp = BigInteger.valueOf(numenator).modInverse(primeNumber);
+                secret = secret.multiply(BigInteger.valueOf(shares.get(j).getPart()).multiply(temp));
             }
-            BigInteger value = shares.get(formula).getSecret();
-            BigInteger tmp = value.multiply(numerator). multiply(denominator.modInverse(primeNumber));
-            accum = primeNumber.add(accum).add(tmp).mod(primeNumber); //  (prime + accum + (value * numerator * modInverse(denominator))) % prime;
+            secret=secret.multiply(shares.get(i).getSecret());
+            finalSecret = finalSecret.add(secret);
         }
-
-        System.out.println("The secret is: " + accum + "\n");
+        finalSecret = finalSecret.mod(primeNumber);
+        System.out.println(finalSecret);
 
 
     }
