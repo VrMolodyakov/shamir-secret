@@ -45,8 +45,10 @@ public class Splitter {
             }
             parts.add(new ShamirSecret(i,part));
         }
-        Combiner combiner = new Combiner(rebuildCount);
-        combiner.combine(parts,primeNumber);
+        //Combiner combiner = new Combiner(rebuildCount);
+        //combiner.combine(parts,primeNumber);
+        JsonHandler handler = new JsonHandler();
+        handler.writeSecretPartToJson(parts,primeNumber);
         return parts;
 
 
