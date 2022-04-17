@@ -10,23 +10,23 @@ import java.util.Optional;
 import java.util.Random;
 
 public class Splitter {
-    private int parts;
+    private long parts;
     private int rebuildCount;
     private final String SECRET_FILE_PATH = "secret/secret.json";
     private final int RANDOM_CERTAINTY = 100;
     private final int RANDOM_BIT_LENGTH = 16;
     private BigInteger primeNumber;
 
-    public Splitter(int parts, int rebuildCountl) {
-        this.parts = parts;
+    public Splitter(int rebuildCountl) {
         this.rebuildCount = rebuildCountl;
     }
 
-    public List<ShamirSecret> splitIntoPieces(int secretNumber){
+    public List<ShamirSecret> splitIntoPieces(){
         JsonHandler jsonHandler = new JsonHandler();
         jsonHandler.parse(SECRET_FILE_PATH);
         BigInteger secret = jsonHandler.getSecret();
         Optional<Long> probablyPrimeNumber = jsonHandler.getPrimeNumber();
+        parts = jsonHandler.getParts();
         if(probablyPrimeNumber.isPresent()){
             this.primeNumber = BigInteger.valueOf(jsonHandler.getPrimeNumber().get());
         }else{
@@ -47,8 +47,7 @@ public class Splitter {
         }
         //Combiner combiner = new Combiner(rebuildCount);
         //combiner.combine(parts,primeNumber);
-        JsonHandler handler = new JsonHandler();
-        handler.writeSecretPartToJson(parts,primeNumber);
+        jsonHandler.writeSecretPartToJson(parts,primeNumber);
         return parts;
 
 

@@ -1,5 +1,7 @@
 package json;
 
+import exception.FileFormatException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -10,13 +12,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class JsonHandler {
     private BigInteger secret;
     private Optional<Long> primeNumber;
-    String PARTS_PATH = "parts/";
+    private Long parts;
+    private String PARTS_PATH = "parts/";
     //"parts/part.json";
     public BigInteger getSecret() {
         return secret;
@@ -24,6 +26,10 @@ public class JsonHandler {
 
     public Optional<Long> getPrimeNumber() {
         return primeNumber;
+    }
+
+    public Long getParts() {
+        return parts;
     }
 
     public void parse(String fileName){
@@ -34,6 +40,7 @@ public class JsonHandler {
             JSONObject jsonObject = (JSONObject) object;
             secret = BigInteger.valueOf((Long) jsonObject.get("secret"));
             primeNumber = Optional.ofNullable( (Long) jsonObject.get("P"));
+            parts = (Long)jsonObject.get("parts");
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
@@ -45,8 +52,8 @@ public class JsonHandler {
         int partNumber = 1;
         for (ShamirSecret part : parts) {
             JSONObject secret = new JSONObject();
-            secret.put("point",part.getPart());
-            secret.put("value",part.getSecret());
+            secret.put("Value",part.getSecret());
+            secret.put("Point",part.getPart());
             secret.put("P",primeNumber);
             write(secret,PARTS_PATH + partNumber + "part.json");
             ++partNumber;
@@ -74,5 +81,24 @@ public class JsonHandler {
         }
 
     }
+
+    public void validateFileKeySet(String fileName){
+        JSONParser jsonParser = new JSONParser();
+        Set<String> expectedKeySet = Set.of("P","Value","Point");
+        Object object = null;
+        try {
+            object = jsonParser.parse(new FileReader(fileName));
+            JSONObject jsonObject = (JSONObject) object;
+            Collection values = jsonObject.values();
+            Set<String> jsonSet = jsonObject.keySet();
+            jsonSet.retainAll(expectedKeySet);
+            if(jsonSet.size() != 3)
+                throw new FileFormatException("inappropriate file format");
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
