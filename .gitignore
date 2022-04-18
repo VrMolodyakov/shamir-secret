@@ -1,5 +1,4 @@
-.iml
+*.iml
 .idea
-/out
-/secret
-/parts
+/out/
+.idea/misc.xml 
