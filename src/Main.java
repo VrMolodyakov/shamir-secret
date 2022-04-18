@@ -17,7 +17,7 @@ public class Main {
         //handler.validateFile("parts/1part.json");
         //handler.writeSecretPartToJson(testSecret,BigInteger.valueOf(98914),"parts/part.json");
 
-       /* JsonHandler handler = new JsonHandler();
+        /*JsonHandler handler = new JsonHandler();
         handler.clearDirectory();*/
 
 
