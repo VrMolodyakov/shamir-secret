@@ -1,7 +1,6 @@
 package json;
 
 import exception.FileFormatException;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -82,7 +81,7 @@ public class JsonHandler {
 
     }
 
-    public void validateFileKeySet(String fileName){
+    public void validateFileFormat(String fileName){
         JSONParser jsonParser = new JSONParser();
         Set<String> expectedKeySet = Set.of("P","Value","Point");
         Object object = null;
@@ -100,5 +99,24 @@ public class JsonHandler {
         }
     }
 
-
+    public List<ShamirSecret> getSecretPartsFromFiles(List<File> files){
+        List<ShamirSecret> secretList = new ArrayList<>();
+        JSONParser jsonParser = new JSONParser();
+        Object object = null;
+        try {
+            for (File file : files) {
+                validateFileFormat(PARTS_PATH + file.getName());
+                object = jsonParser.parse(new FileReader(PARTS_PATH + file.getName()));
+                JSONObject jsonObject = (JSONObject) object;
+                //BigInteger.valueOf((Long) jsonObject.get("secret"));
+                BigInteger value = BigInteger.valueOf((Long) jsonObject.get("Value"));
+                BigInteger primeNumber = BigInteger.valueOf((Long) jsonObject.get("P"));
+                Long point = (Long) jsonObject.get("Point");
+                secretList.add(new ShamirSecret(point,value,primeNumber));
+            }
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        return secretList;
+    }
 }

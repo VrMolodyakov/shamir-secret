@@ -1,17 +1,22 @@
 package algorithm;
 
+import json.JsonHandler;
 import secret.ShamirSecret;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Combiner {
-    private final int rebuildCount;
+    private List<File> partsList;
+    private int rebuildCount;
 
-    public Combiner(int rebuildCount) {
-        this.rebuildCount = rebuildCount;
+    public Combiner(List<File> partsList){
+        this.partsList = partsList;
     }
 
     public void combine(List<ShamirSecret> shares,BigInteger primeNumber){
@@ -22,7 +27,7 @@ public class Combiner {
             secret = BigInteger.ONE;
             for (int j = 0; j < shares.size(); j++) {
                 if (j == i) continue;
-                int numenator =shares.get(j).getPart() - shares.get(i).getPart();
+                long numenator =shares.get(j).getPart() - shares.get(i).getPart();
                 temp = BigInteger.valueOf(numenator).modInverse(primeNumber);
                 secret = secret.multiply(BigInteger.valueOf(shares.get(j).getPart()).multiply(temp));
             }
@@ -34,6 +39,22 @@ public class Combiner {
 
 
     }
+
+    public void combine(){
+        JsonHandler jsonHandler = new JsonHandler();
+        List<ShamirSecret> secretParts = jsonHandler.getSecretPartsFromFiles(partsList);
+        checkOnEqualSecretPart(secretParts);
+
+
+    }
+
+    private void checkOnEqualSecretPart(List<ShamirSecret> secretParts){
+        Set<ShamirSecret> check = new HashSet<>(secretParts);
+        if(check.size() != secretParts.size()) {
+            throw new IllegalStateException("Identical secret's part");
+        }
+    }
+
 
 }
 

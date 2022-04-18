@@ -43,7 +43,7 @@ public class Splitter {
             for (int j = 1; j < rebuildCount; j++) {
                 part = part.add(coefficents.get(j).multiply(BigInteger.valueOf(i).pow(j))).mod(primeNumber);
             }
-            parts.add(new ShamirSecret(i,part));
+            parts.add(new ShamirSecret((long) i,part));
         }
         //Combiner combiner = new Combiner(rebuildCount);
         //combiner.combine(parts,primeNumber);

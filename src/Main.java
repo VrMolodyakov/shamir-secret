@@ -1,3 +1,4 @@
+import algorithm.Combiner;
 import algorithm.Splitter;
 import json.JsonHandler;
 import secret.ShamirSecret;
@@ -13,11 +14,18 @@ public class Main {
         //Splitter splitter = new Splitter(REBUILD_COUNT);
         //splitter.splitIntoPieces();
         //List<ShamirSecret> shamirSecrets = splitter.splitIntoPieces(123);
-        JsonHandler handler = new JsonHandler();
         //handler.validateFile("parts/1part.json");
         //handler.writeSecretPartToJson(testSecret,BigInteger.valueOf(98914),"parts/part.json");
-        List<File> parts = getRandomSecretParts("parts", 4);
 
+       /* JsonHandler handler = new JsonHandler();
+        handler.clearDirectory();*/
+
+
+        Splitter splitter = new Splitter(REBUILD_COUNT);
+        splitter.splitIntoPieces();
+        List<File> parts = getRandomSecretParts("parts", 4);
+        Combiner combiner = new Combiner(parts);
+        combiner.combine();
     }
 
     private static List<File> getRandomSecretParts(String folderPath, int partCount){
