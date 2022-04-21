@@ -1,5 +1,6 @@
 package algorithm;
 
+import exception.PartsValidator;
 import json.JsonHandler;
 import secret.ShamirSecret;
 
@@ -15,14 +16,19 @@ public class Combiner {
     private List<File> partsList;
     private int rebuildCount;
 
-    public Combiner(List<File> partsList){
+    public Combiner(int rebuildCount){
+        this.rebuildCount = rebuildCount;
+    }
+
+    private Combiner(List<File> partsList){
         this.partsList = partsList;
     }
 
-    public void combine(List<ShamirSecret> shares,BigInteger primeNumber){
+    public BigInteger combine(List<ShamirSecret> shares){
         BigInteger secret;
         BigInteger finalSecret = BigInteger.ZERO;
         BigInteger temp;
+        BigInteger primeNumber = shares.get(0).getPrimeNumber();
         for (int i = 0; i < shares.size(); i++) {
             secret = BigInteger.ONE;
             for (int j = 0; j < shares.size(); j++) {
@@ -35,25 +41,21 @@ public class Combiner {
             finalSecret = finalSecret.add(secret);
         }
         finalSecret = finalSecret.mod(primeNumber);
-        System.out.println(finalSecret);
+        return finalSecret;
 
 
     }
 
-    public void combine(){
+    public void combineParts(List<File> partsList){
         JsonHandler jsonHandler = new JsonHandler();
         List<ShamirSecret> secretParts = jsonHandler.getSecretPartsFromFiles(partsList);
-        checkOnEqualSecretPart(secretParts);
-
+        PartsValidator.validateSecretParts(secretParts,rebuildCount);
+        BigInteger combinedSecret = combine(secretParts);
+        jsonHandler.writeCombinedSecret(combinedSecret,secretParts.get(0).getSecret());
 
     }
 
-    private void checkOnEqualSecretPart(List<ShamirSecret> secretParts){
-        Set<ShamirSecret> check = new HashSet<>(secretParts);
-        if(check.size() != secretParts.size()) {
-            throw new IllegalStateException("Identical secret's part");
-        }
-    }
+
 
 
 }

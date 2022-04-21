@@ -46,20 +46,29 @@ public class JsonHandler {
 
     }
 
-    public void writeSecretPartToJson(List<ShamirSecret> parts,BigInteger primeNumber){
+    public void writeSecretPartToJson(List<ShamirSecret> parts){
         clearDirectory();
         int partNumber = 1;
         for (ShamirSecret part : parts) {
             JSONObject secret = new JSONObject();
             secret.put("Value",part.getSecret());
             secret.put("Point",part.getPart());
-            secret.put("P",primeNumber);
+            secret.put("P",part.getPrimeNumber());
             write(secret,PARTS_PATH + partNumber + "part.json");
             ++partNumber;
         }
 
 
     }
+
+    public void writeCombinedSecret(BigInteger rebuildSecret,BigInteger primeNumber){
+        JSONObject secret = new JSONObject();
+        secret.put("Secret",rebuildSecret);
+        secret.put("P",primeNumber);
+        write(secret,"secret/" + "rebuildSecret.json");
+    }
+
+
     private void write(JSONObject part,String path){
         try (FileWriter file = new FileWriter(path)) {
             file.write(part.toString());

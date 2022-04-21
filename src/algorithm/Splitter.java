@@ -21,7 +21,7 @@ public class Splitter {
         this.rebuildCount = rebuildCountl;
     }
 
-    public List<ShamirSecret> splitIntoPieces(){
+    public List<ShamirSecret> splitIntoPieces(String filePath){
         JsonHandler jsonHandler = new JsonHandler();
         jsonHandler.parse(SECRET_FILE_PATH);
         BigInteger secret = jsonHandler.getSecret();
@@ -43,11 +43,11 @@ public class Splitter {
             for (int j = 1; j < rebuildCount; j++) {
                 part = part.add(coefficents.get(j).multiply(BigInteger.valueOf(i).pow(j))).mod(primeNumber);
             }
-            parts.add(new ShamirSecret((long) i,part));
+            parts.add(new ShamirSecret((long) i,part,primeNumber));
         }
         //Combiner combiner = new Combiner(rebuildCount);
         //combiner.combine(parts,primeNumber);
-        jsonHandler.writeSecretPartToJson(parts,primeNumber);
+        jsonHandler.writeSecretPartToJson(parts);
         return parts;
 
 

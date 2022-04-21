@@ -23,6 +23,10 @@ public class ShamirSecret {
         return part;
     }
 
+    public BigInteger getPrimeNumber() {
+        return primeNumber;
+    }
+
     public BigInteger getSecret() {
         return secret;
     }
