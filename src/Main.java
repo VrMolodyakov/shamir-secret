@@ -1,10 +1,7 @@
-import algorithm.Combiner;
-import algorithm.Splitter;
-import json.JsonHandler;
-import secret.ShamirSecret;
+import algorithm.SecretCombiner;
+import algorithm.SecretSplitter;
 
 import java.io.File;
-import java.math.BigInteger;
 import java.util.*;
 
 public class Main {
@@ -20,10 +17,10 @@ public class Main {
                 case (0):
                     System.out.println("Введите минимальное число людей для восстановления (не меньше 4) : ");
                     rebuildCount = scanner.nextInt();
-                    Splitter splitter = new Splitter(rebuildCount);
+                    SecretSplitter secretSplitter = new SecretSplitter(rebuildCount);
                     System.out.println("Введите имя файла : ");
                     String fileName = scanner.next();
-                    splitter.splitIntoPieces("/secret" + fileName);
+                    secretSplitter.splitIntoPieces("/secret" + fileName);
                     System.out.println("Секрет разделен");
                     break;
                 case (1):
@@ -36,8 +33,8 @@ public class Main {
                         File file = new File("parts/" + fileName);
                         files.add(file);
                     }
-                    Combiner combiner = new Combiner(count);
-                    combiner.combineParts(files);
+                    SecretCombiner secretCombiner = new SecretCombiner(count);
+                    secretCombiner.combineParts(files);
                     System.out.println("Секрет восстановлен");
                     break;
                 default:

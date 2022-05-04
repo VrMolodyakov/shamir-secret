@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-public class Splitter {
+public class SecretSplitter {
     private long parts;
     private int rebuildCount;
     private static final String SECRET_FILE_PATH = "secret/secret.json";
@@ -17,7 +17,7 @@ public class Splitter {
     private final int RANDOM_BIT_LENGTH = 16;
     private BigInteger primeNumber;
 
-    public Splitter(int rebuildCount) {
+    public SecretSplitter(int rebuildCount) {
         this.rebuildCount = rebuildCount;
     }
 

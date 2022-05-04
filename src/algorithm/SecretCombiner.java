@@ -12,15 +12,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Combiner {
+public class SecretCombiner {
     private List<File> partsList;
     private int rebuildCount;
 
-    public Combiner(int rebuildCount){
+    public SecretCombiner(int rebuildCount){
         this.rebuildCount = rebuildCount;
     }
 
-    private Combiner(List<File> partsList){
+    private SecretCombiner(List<File> partsList){
         this.partsList = partsList;
     }
 
