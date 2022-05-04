@@ -33,11 +33,10 @@ public class Main {
                     System.out.println("Введите имена файлов: ");
                     for (int i = 0; i < count; i++) {
                         fileName = scanner.next();
-                        System.out.println(fileName);
                         File file = new File("parts/" + fileName);
                         files.add(file);
                     }
-                    Combiner combiner = new Combiner(rebuildCount);
+                    Combiner combiner = new Combiner(count);
                     combiner.combineParts(files);
                     System.out.println("Секрет восстановлен");
                     break;

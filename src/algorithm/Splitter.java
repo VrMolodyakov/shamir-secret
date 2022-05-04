@@ -12,13 +12,13 @@ import java.util.Random;
 public class Splitter {
     private long parts;
     private int rebuildCount;
-    private final String SECRET_FILE_PATH = "secret/secret.json";
+    private static final String SECRET_FILE_PATH = "secret/secret.json";
     private final int RANDOM_CERTAINTY = 100;
     private final int RANDOM_BIT_LENGTH = 16;
     private BigInteger primeNumber;
 
-    public Splitter(int rebuildCountl) {
-        this.rebuildCount = rebuildCountl;
+    public Splitter(int rebuildCount) {
+        this.rebuildCount = rebuildCount;
     }
 
     public List<ShamirSecret> splitIntoPieces(String filePath){
@@ -38,7 +38,7 @@ public class Splitter {
             coefficents.add(getRandomCoefficent(primeNumber));
         }
         List<ShamirSecret> parts = new ArrayList<>();
-        for (int i = 1; i < this.parts; i++) {
+        for (int i = 1; i <= this.parts; i++) {
             BigInteger part = secret;
             for (int j = 1; j < rebuildCount; j++) {
                 part = part.add(coefficents.get(j).multiply(BigInteger.valueOf(i).pow(j))).mod(primeNumber);

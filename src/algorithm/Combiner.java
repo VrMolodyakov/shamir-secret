@@ -51,7 +51,7 @@ public class Combiner {
         List<ShamirSecret> secretParts = jsonHandler.getSecretPartsFromFiles(partsList);
         PartsValidator.validateSecretParts(secretParts,rebuildCount);
         BigInteger combinedSecret = combine(secretParts);
-        jsonHandler.writeCombinedSecret(combinedSecret,secretParts.get(0).getSecret());
+        jsonHandler.writeCombinedSecret(combinedSecret,secretParts.get(0).getPrimeNumber());
 
     }
 
